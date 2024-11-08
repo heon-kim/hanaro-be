@@ -1,6 +1,6 @@
 package chap11_Thread;
 
-public class p166 {
+public class P166 {
     public static void main(String[] args) {
         long id = Thread.currentThread().getId();
         String name = Thread.currentThread().getName();

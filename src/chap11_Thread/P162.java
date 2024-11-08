@@ -18,7 +18,7 @@ class TimerThread extends Thread{
     }
 }
 
-public class p162 {
+public class P162 {
     public static void main(String[] args) {
         new TimerThread("Thread1").start();
         new TimerThread("Thread2").start();

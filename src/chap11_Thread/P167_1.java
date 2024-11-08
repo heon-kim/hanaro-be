@@ -12,7 +12,7 @@ class PriorityThread extends Thread{
         }
     }
 }
-public class p167_1 {
+public class P167_1 {
     public static void main(String[] args) {
         PriorityThread p1 = new PriorityThread("높음");
         PriorityThread p2 = new PriorityThread("중간");
