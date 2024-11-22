@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 @WebServlet("*.action")
@@ -28,11 +29,17 @@ public class MemberController extends HttpServlet {
         }else if(cmd.equals("/member/join.action")){
             System.out.println("join");
             System.out.println("=====================================");
+            insert(request,response);
         }
         else if(cmd.equals("/member/list.action")){
             System.out.println("list");
             System.out.println("=====================================");
             list(request,response);
+        }
+        else if(cmd.equals("/member/read.action")){
+            System.out.println("read");
+            System.out.println("=====================================");
+            getMember(request,response);
         }
     }
 
@@ -43,5 +50,30 @@ public class MemberController extends HttpServlet {
         dao.close();
         request.setAttribute("mList", mList);
         request.getRequestDispatcher("/member/memberList.jsp").forward(request,response);
+    }
+
+    private void getMember(HttpServletRequest request, HttpServletResponse response) throws  ServletException, IOException{
+        System.out.println("read action!");
+        ServletContext application = request.getServletContext();
+        MemberDAO dao = new MemberDAO(application);
+        Members member = dao.getMember(request.getParameter("userId"));
+        dao.close();
+        request.setAttribute("member", member);
+        System.out.println("member"+member);
+        request.getRequestDispatcher("/member/read.jsp").forward(request,response);
+    }
+
+    private void insert(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        ServletContext application = request.getServletContext();
+        Members member= new Members();
+        MemberDAO dao = new MemberDAO(application);
+        member.setUserId(request.getParameter("userId"));
+        member.setUserName(request.getParameter("userName"));
+        member.setEmail(request.getParameter("email"));
+        member.setUserPwd(request.getParameter("userPwd"));
+        dao.insert(member);
+        request.getRequestDispatcher("/member/list.action").forward(request,response);
+
+        dao.close();
     }
 }

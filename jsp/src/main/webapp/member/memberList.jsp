@@ -17,7 +17,7 @@
     </tr>
     <c:forEach items="${mList}" var="item">
         <tr>
-            <td><a href="${pageContext.request.contextPath}/read.action?userId=${item.userId}">${item.userId}</a></td>
+            <td><a href="${pageContext.request.contextPath}/member/read.action?userId=${item.userId}">${item.userId}</a></td>
             <td>${item.userPwd}</td>
             <td>${item.userName}</td>
             <td>${item.email}</td>

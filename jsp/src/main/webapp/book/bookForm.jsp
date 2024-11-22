@@ -1,10 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>book</title>
+    <title>Book</title>
 </head>
 <body>
-<form action="${pageContext.request.contextPath}/book" method="post">
+<form action="${pageContext.request.contextPath}/member/book" method="post">
     책 아이디: <input type="text" name="bookId"><br />
     책 제목: <input type="text" name="bookName"><br />
     출판사: <input type="text" name="publisher"><br />
