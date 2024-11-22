@@ -104,5 +104,26 @@ public class MemberDAO extends JDBConnect {
         return result; // 업데이트된 행의 개수 반환
     }
 
+    public int delete(String userId) {
+        int result = 0;
+        String sql = "DELETE FROM MEMBERS WHERE userId = ?";
+
+        try {
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, userId);
+
+            result = pstmt.executeUpdate();
+        } catch (Exception e) {
+            System.out.println("Update 오류: " + e.getMessage());
+        } finally {
+            try {
+                if (pstmt != null) pstmt.close();
+            } catch (Exception e) {
+                System.out.println("Statement 닫기 오류: " + e.getMessage());
+            }
+        }
+        return result;
+    }
+
 
 }

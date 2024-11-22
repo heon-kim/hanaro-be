@@ -53,6 +53,10 @@ public class MemberController extends HttpServlet {
             System.out.println("update");
             System.out.println("=====================================");
             update(request,response);
+        } else if(cmd.equals("/member/delete.action")){
+            System.out.println("delete");
+            System.out.println("=====================================");
+            delete(request,response);
         }
     }
 
@@ -144,6 +148,16 @@ public class MemberController extends HttpServlet {
         member.setEmail(request.getParameter("email"));
         member.setUserPwd(request.getParameter("userPwd"));
         dao.update(member);
+        request.getRequestDispatcher("/member/list.action").forward(request,response);
+
+        dao.close();
+    }
+
+    private void delete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        ServletContext application = request.getServletContext();
+        MemberDAO dao = new MemberDAO(application);
+        HttpSession session = request.getSession();
+        dao.delete((String) session.getAttribute("loginId"));
         request.getRequestDispatcher("/member/list.action").forward(request,response);
 
         dao.close();
