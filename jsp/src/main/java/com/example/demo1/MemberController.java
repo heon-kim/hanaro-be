@@ -8,8 +8,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -26,6 +28,7 @@ public class MemberController extends HttpServlet {
         if(cmd.equals("/member/login.action")){
             System.out.println("login");
             System.out.println("=====================================");
+            login(request,response);
         }else if(cmd.equals("/member/join.action")){
             System.out.println("join");
             System.out.println("=====================================");
@@ -76,4 +79,41 @@ public class MemberController extends HttpServlet {
 
         dao.close();
     }
+
+    private void login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println("login action!");
+
+        ServletContext application = request.getServletContext();
+        MemberDAO dao = new MemberDAO(application);
+        String userId = request.getParameter("userId");
+        String userPwd = request.getParameter("userPwd");
+        Members member = dao.getMember(userId);
+        HttpSession session = request.getSession();
+        boolean loggedIn = false;
+
+        if (member != null) {
+            System.out.println("pwd"+member.getUserPwd());
+            if (member.getUserPwd().equals(userPwd)) {
+                loggedIn = true;
+                session.setAttribute("loginId", userId);
+            }else{
+                System.out.println("pwd err");
+                response.setContentType("text/html; charset=UTF-8");
+                PrintWriter out = response.getWriter();
+                out.println("<script>alert('비밀번호를 확인해주세요.'); history.go(-1);</script>");
+                out.flush();
+                response.flushBuffer();
+                out.close();
+            }
+        }
+        dao.close();
+        if (loggedIn) {
+            System.out.println("loggedIn" + loggedIn);
+            System.out.println(session.getAttribute("loginId"));
+            response.sendRedirect(request.getContextPath() + "/member/list.action");
+        } else {
+            request.getRequestDispatcher("/member/loginFrm.jsp").forward(request, response);
+        }
+    }
+
 }
