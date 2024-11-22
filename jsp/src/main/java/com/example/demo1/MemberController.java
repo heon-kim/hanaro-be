@@ -44,6 +44,16 @@ public class MemberController extends HttpServlet {
             System.out.println("=====================================");
             getMember(request,response);
         }
+        else if(cmd.equals("/member/updateFrm.action")){
+            System.out.println("updateFrm");
+            System.out.println("=====================================");
+            getUpdateMember(request,response);
+        }
+        else if(cmd.equals("/member/update.action")){
+            System.out.println("update");
+            System.out.println("=====================================");
+            update(request,response);
+        }
     }
 
     private void list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -62,7 +72,6 @@ public class MemberController extends HttpServlet {
         Members member = dao.getMember(request.getParameter("userId"));
         dao.close();
         request.setAttribute("member", member);
-        System.out.println("member"+member);
         request.getRequestDispatcher("/member/read.jsp").forward(request,response);
     }
 
@@ -92,7 +101,6 @@ public class MemberController extends HttpServlet {
         boolean loggedIn = false;
 
         if (member != null) {
-            System.out.println("pwd"+member.getUserPwd());
             if (member.getUserPwd().equals(userPwd)) {
                 loggedIn = true;
                 session.setAttribute("loginId", userId);
@@ -108,12 +116,36 @@ public class MemberController extends HttpServlet {
         }
         dao.close();
         if (loggedIn) {
-            System.out.println("loggedIn" + loggedIn);
-            System.out.println(session.getAttribute("loginId"));
             response.sendRedirect(request.getContextPath() + "/member/list.action");
         } else {
             request.getRequestDispatcher("/member/loginFrm.jsp").forward(request, response);
         }
     }
 
+    private void getUpdateMember(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        ServletContext application = request.getServletContext();
+        HttpSession session = request.getSession();
+        System.out.println(session.getAttribute("loginId"));
+
+        MemberDAO dao = new MemberDAO(application);
+        String loginId = (String) session.getAttribute("loginId");
+        Members member = dao.getMember(loginId);
+        dao.close();
+        request.setAttribute("member", member);
+        request.getRequestDispatcher("/member/updateFrm.jsp").forward(request,response);
+    }
+
+    private void update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        ServletContext application = request.getServletContext();
+        Members member= new Members();
+        MemberDAO dao = new MemberDAO(application);
+        member.setUserId(request.getParameter("userId"));
+        member.setUserName(request.getParameter("userName"));
+        member.setEmail(request.getParameter("email"));
+        member.setUserPwd(request.getParameter("userPwd"));
+        dao.update(member);
+        request.getRequestDispatcher("/member/list.action").forward(request,response);
+
+        dao.close();
+    }
 }

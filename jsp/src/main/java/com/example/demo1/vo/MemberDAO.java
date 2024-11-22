@@ -80,4 +80,29 @@ public class MemberDAO extends JDBConnect {
         return result; // 삽입된 행의 개수 반환
     }
 
+    public int update(Members member) {
+        int result = 0; // 업데이트된 행의 개수를 저장할 변수
+        String sql = "UPDATE MEMBERS SET userName = ?, userPwd = ?, email = ? WHERE userId = ?";
+
+        try {
+            pstmt = conn.prepareStatement(sql); // PreparedStatement 생성
+            pstmt.setString(1, member.getUserName());
+            pstmt.setString(2, member.getUserPwd());
+            pstmt.setString(3, member.getEmail());
+            pstmt.setString(4, member.getUserId());
+
+            result = pstmt.executeUpdate(); // UPDATE 실행 및 업데이트된 행의 개수를 반환
+        } catch (Exception e) {
+            System.out.println("Update 오류: " + e.getMessage()); // 예외 처리
+        } finally {
+            try {
+                if (pstmt != null) pstmt.close(); // PreparedStatement 닫기
+            } catch (Exception e) {
+                System.out.println("Statement 닫기 오류: " + e.getMessage());
+            }
+        }
+        return result; // 업데이트된 행의 개수 반환
+    }
+
+
 }
