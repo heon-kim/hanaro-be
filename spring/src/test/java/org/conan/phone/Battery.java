@@ -1,4 +1,4 @@
-package org.conan;
+package org.conan.phone;
 
 public class Battery implements Chargeable {
     public String getMode() {
