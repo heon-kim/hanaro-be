@@ -2,7 +2,8 @@ package org.conan.mapper;
 
 import org.apache.ibatis.annotations.Select;
 
-public class TimeMapper {
+public interface TimeMapper {
     @Select("SELECT NOW()")
     public String getTime();
+    public String getTime2();
 }
