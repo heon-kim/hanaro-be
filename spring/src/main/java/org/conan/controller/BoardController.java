@@ -23,6 +23,8 @@ public class BoardController {
         log.info("list");
         model.addAttribute("bList", boardService.getList());
     }
+    @GetMapping("/write")
+    public void registerPage(){}
     @PostMapping("/write")
     public String register(Board board, RedirectAttributes rttr){
         log.info("write: "+board);
@@ -30,9 +32,9 @@ public class BoardController {
         rttr.addFlashAttribute("result", board.getBno());
         return "redirect:/board/list";
     }
-    @GetMapping("/read")
+    @GetMapping({"/read", "/modify"})
     public void read(@RequestParam("bno") Integer bno, Model model){
-        log.info("/read");
+        log.info("/read or /write");
         model.addAttribute("board", boardService.read(bno));
     }
     @PostMapping("/modify")
@@ -40,8 +42,9 @@ public class BoardController {
         log.info("modify: "+board);
         if(boardService.modify(board)){
             rttr.addFlashAttribute("result","success");
+            return "redirect:/board/list";
         }
-        return "redirect:/board/list";
+        return "/board/modify";
     }
     @PostMapping("/remove")
     public String remove(@RequestParam("bno")Integer bno, RedirectAttributes rttr){
