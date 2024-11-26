@@ -10,6 +10,27 @@
 <html>
 <head>
     <title>Board</title>
+    <style>
+        ul {
+            list-style-type: none;
+        }
+        li {
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        a, button {
+            padding: 8px 15px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        a:hover, button:hover{
+            background-color: #dddddd;
+        }
+    </style>
 </head>
 <body>
     <ul>
