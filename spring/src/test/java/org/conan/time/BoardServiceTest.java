@@ -20,11 +20,11 @@ public class BoardServiceTest {
     @Setter(onMethod_ = {@Autowired})
     private BoardService boardService;
 
-//    @Test
-//    public void testExist() {
-//        log.info(boardService);
-//        assertNotNull(service);
-//    }
+    @Test
+    public void testExist() {
+        log.info(boardService);
+        assertNotNull(boardService);
+    }
 
     @Test
     public void testGetList(){
@@ -34,7 +34,7 @@ public class BoardServiceTest {
     @Test
     public void testWrite(){
         Board board = new Board();
-        board.setTitle("새글 새글 새글 from Service");
+        board.setTitle("새글 from Service");
         board.setContent("새 내용 내용 내용 from Service");
         board.setWriter("newbie");
         boardService.write(board);
