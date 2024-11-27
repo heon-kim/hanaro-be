@@ -11,6 +11,11 @@
     </style>
 </head>
 <body>
+<ul>
+    <th:block th:each="dto:${list}">
+        <li th:text="${dto.sno % 5 ==0}?${dto.sno}:${dto.first}"></li>
+    </th:block>
+</ul>
 <!-- if/unless -->
 <ul>
     <li th:each="str, status : ${list}" >
