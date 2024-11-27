@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ExLayout</title>
+</head>
+<body>
+<h1>Fragment Test</h1>
+<div>
+    <th:block th:replace="~{/fragments/fragment3 :: target(~{this :: #ulFirst}, ~{this :: #ulSecond} )}">
+        <ul id="ulFirst">
+            <li>AAA</li>
+            <li>BBB</li>
+            <li>CCC</li>
+        </ul>
+        <ul id="ulSecond">
+            <li>AAA</li>
+            <li>BBB</li>
+            <li>CCC</li>
+        </ul>
+    </th:block>
+</div>
+
+</body>
+</html>
