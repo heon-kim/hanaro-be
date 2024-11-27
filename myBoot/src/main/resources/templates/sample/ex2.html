@@ -2,13 +2,36 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Ex1</title>
+    <title>Ex2</title>
+    <style>
+        .target{
+            background-color: rgba(255, 0, 0, 0.35);
+            border-radius: 4px;
+        }
+    </style>
 </head>
 <body>
+<!-- if/unless -->
+<ul>
+    <li th:each="str, status : ${list}" >
+        <span th:if="${status.odd}">ODD -- [[${str}]]</span>
+        <span th:unless="${status.odd}">EVEN -- [[${str}]]</span>
+    </li>
+</ul>
+<!--class 처리-->
     <ul>
-        <li th:each="dto : ${list}">
-            [[${dto}]]
+        <li
+            th:each="dto, state : ${list}"
+            th:class="${dto.sno % 5 == 0}? 'target'"
+            th:text="${dto}"
+        >
         </li>
     </ul>
+<!-- state -->
+<ul>
+    <li th:each="dto, state : ${list}" >
+        [[${state.index}]] --- [[${dto}]]
+    </li>
+</ul>
 </body>
 </html>
