@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Write</title>
+    <style>
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        input[type="text"] {
+            padding: 8px;
+            border: 1px solid #f4f4f4;
+        }
+        a, input[type="submit"] {
+            font-size:16px;
+            padding: 8px 15px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #f4f4f4;
+            color: black;
+            text-decoration: none;
+        }
+        a:hover, input[type="submit"]:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+<form th:action="@{/board/modify(bno=${board.bno})}" method="post">
+    <ul>
+        <li>게시글 번호: <span th:text="${board.bno}"></span></li>
+        <li>제목: <input type="text" name="title" th:value="${board.title}" /></li>
+        <li>내용: <input type="text" name="content" th:value="${board.content}" /></li>
+        <li>작성자: <input type="text" name="writer" th:value="${board.writer}" /></li>
+        <li>등록일: <span th:text="${#temporals.format(board.regDate, 'yyyy/MM/dd')}"></span></li>
+        <li>조회수: <span th:text="${board.hit}"></span></li>
+    </ul>
+    <a th:href="@{/board/read(bno=${board.bno})}">취소</a>
+    <input type="submit" value="수정">
+</form>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<html>
+<head>
+    <title>Board</title>
+    <style>
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        input[type="text"] {
+            padding: 8px;
+            border: 1px solid #f4f4f4;
+        }
+        a, input[type="submit"] {
+            padding: 8px 15px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #f4f4f4;
+            color: black;
+            text-decoration: none;
+        }
+        a:hover, input[type="submit"]:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <ul>
+        <li>게시글 번호: [[${board.bno}]]</li>
+        <li>제목: [[${board.title}]]</li>
+        <li>내용: [[${board.content}]]</li>
+        <li>작성자: [[${board.writer}]]</li>
+        <li>등록일: [[${#temporals.format(board.regDate, 'yyyy/MM/dd')}]]</li>
+        <li>조회수: [[${board.hit}]]</li>
+    </ul>
+    <a th:href="@{/board/list}">←목록으로 돌아가기</a>
+    <a th:href="@{/board/modify(bno=${board.bno})}">수정하기→</a>
+
+</body>
+</html>
