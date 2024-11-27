@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ExLayout</title>
+</head>
+<body>
+<h1>Fragment Test</h1>
+<div>
+    <th:block th:replace="~{/fragments/fragment2}"></th:block>
+</div>
+<span>Layout 1-1</span>
+<div th:replace="~{/fragments/fragment1 :: part1}"></div>
+<span>Layout 1-2</span>
+<div th:replace="~{/fragments/fragment1 :: part2}"></div>
+<span>Layout 1-3</span>
+<div th:replace="~{/fragments/fragment1 :: part3}"></div>
+
+</body>
+</html>
