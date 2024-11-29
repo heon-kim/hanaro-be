@@ -3,6 +3,7 @@ package org.conan.myboot.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -10,21 +11,25 @@ import java.time.LocalDate;
 @Table(name="Todo")
 @ToString
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class Todo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer tno;
 
-    @Column(length=200, nullable=false)
+    @Column(length = 200, nullable = false)
     private String title;
-    @Column(length=200, nullable=false)
+
+    @Column(length = 200, nullable = false)
     private String writer;
-    @Column
+
     @ColumnDefault("0")
     private boolean complete;
-    @Column
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dueDate;
 }
