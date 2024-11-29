@@ -1,5 +1,6 @@
 package org.conan.myboot;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import org.conan.myboot.domain.Memo;
 import org.conan.myboot.repository.MemoRepository;
@@ -10,7 +11,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.Commit;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -78,5 +81,28 @@ public class MemoRepositoryTest {
         result.get().forEach(memo->{
             log.info(memo);
         });
+    }
+    @Test
+    public void testQueryMethods(){
+        List<Memo> list = memoRepository.findAllByMnoBetweenOrderByMnoDesc(70L, 80L);
+        for(Memo memo:list)
+            log.info(memo);
+    }
+    @Test
+    public void testQueryMethodWithPageable(){
+        Pageable pageable  = PageRequest.of(0,10,Sort.by("mno").descending());
+        Page<Memo> result = memoRepository.findByMnoBetween(10L, 50L, pageable);
+        result.get().forEach(memo->log.info(memo));
+    }
+    @Commit
+    @Transactional
+    @Test
+    public void testDeleteQueryMethods(){
+        memoRepository.deleteMemoByMnoLessThan(20L);
+    }
+
+    @Test
+    public void testGetListDesc(){
+        memoRepository.getListDesc();
     }
 }
