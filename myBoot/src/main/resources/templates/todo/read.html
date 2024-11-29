@@ -2,11 +2,11 @@
 <head>
     <title>Board</title>
     <style>
-        ul {
+        .list {
             list-style-type: none;
             padding: 0;
         }
-        li {
+        .list li {
             padding: 8px;
             margin-bottom: 10px;
             border: 1px solid #ddd;
@@ -16,31 +16,22 @@
             padding: 8px;
             border: 1px solid #f4f4f4;
         }
-        a, input[type="submit"] {
-            padding: 8px 15px;
-            margin-right: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            background-color: #f4f4f4;
-            color: black;
-            text-decoration: none;
-        }
-        a:hover, input[type="submit"]:hover {
-            background-color: #ddd;
-        }
     </style>
 </head>
 <body>
-    <ul>
-        <li>게시글 번호: [[${todo.tno}]]</li>
-        <li>제목: [[${todo.title}]]</li>
-        <li>작성자: [[${todo.writer}]]</li>
-        <li>완료: [[${todo.complete}?${"✅"}:${"❌"}]]</li>
-        <li>기한: [[${#temporals.format(todo.dueDate, 'yyyy/MM/dd')}]]</li>
-    </ul>
-    <a th:href="@{/todo/list}">←목록으로 돌아가기</a>
-    <a th:href="@{/todo/modify(tno=${todo.tno})}">수정하기→</a>
-
+<th:block th:replace="~{layouts/basic :: setContent(~{this::content} )}">
+    <th:block th:fragment="content">
+        <h1>조회</h1>
+        <ul class="list">
+            <li>게시글 번호: [[${todo.tno}]]</li>
+            <li>제목: [[${todo.title}]]</li>
+            <li>작성자: [[${todo.writer}]]</li>
+            <li>완료: [[${todo.complete}?${"✅"}:${"❌"}]]</li>
+            <li>기한: [[${#temporals.format(todo.dueDate, 'yyyy/MM/dd')}]]</li>
+        </ul>
+        <a th:href="@{/todo/list}">←목록으로 돌아가기</a>
+        <a th:href="@{/todo/modify(tno=${todo.tno})}">수정하기→</a>
+    </th:block>
+</th:block>
 </body>
 </html>

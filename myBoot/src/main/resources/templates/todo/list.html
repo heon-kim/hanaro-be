@@ -17,40 +17,31 @@
         tr:hover {
             background-color: #f9f9f9;
         }
-        a.button {
-            display: block;
-            padding: 8px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            background-color: #f4f4f4;
-            color: black;
-            text-decoration: none;
-            width: fit-content;
-            margin-top:10px;
-        }
-        a.button:hover {
-            background-color: #ddd;
-        }
     </style>
 </head>
 <body>
-    <table>
-        <tr>
-            <th>No</th>
-            <th>제목</th>
-            <th>작성자</th>
-            <th>완료</th>
-            <th>기한</th>
-        </tr>
-        <tr th:each="item : ${tList}">
-            <td>[[${item.tno}]]</td>
-            <td><a th:href="@{/todo/read(tno=${item.tno})}">[[${item.title}]]</a></td>
-            <td>[[${item.writer}]]</td>
-            <td>[[${item.complete}?${"✅"}:${"❌"}]]</td>
-            <td>[[${#temporals.format(item.dueDate, 'yyyy/MM/dd')}]]</td>
-        </tr>
-    </table>
-    <a class="button" th:href="@{/todo/write}">새 글 쓰기</a>
+<th:block th:replace="~{layouts/basic :: setContent(~{this::content} )}">
+    <th:block th:fragment="content">
+        <h1>목록보기</h1>
+        <a class="button" th:href="@{/todo/write}">새 글 쓰기→</a>
+        <table>
+            <tr>
+                <th>No</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>완료</th>
+                <th>기한</th>
+            </tr>
+            <tr th:each="item : ${tList}">
+                <td>[[${item.tno}]]</td>
+                <td><a th:href="@{/todo/read(tno=${item.tno})}">[[${item.title}]]</a></td>
+                <td>[[${item.writer}]]</td>
+                <td>[[${item.complete}?${"✅"}:${"❌"}]]</td>
+                <td>[[${#temporals.format(item.dueDate, 'yyyy/MM/dd')}]]</td>
+            </tr>
+        </table>
+    </th:block>
+</th:block>
+
 </body>
 </html>
