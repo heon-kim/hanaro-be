@@ -44,7 +44,7 @@
             <th>등록일</th>
             <th>조회수</th>
         </tr>
-        <tr th:each="item : ${bList}">
+        <tr th:each="item: ${bList.dtoList}">
             <td>[[${item.bno}]]</td>
             <td><a th:href="@{/board/read(bno=${item.bno})}">[[${item.title}]]</a></td>
             <td>[[${item.content}]]</td>
@@ -53,6 +53,21 @@
             <td>[[${item.hit}]]</td>
         </tr>
     </table>
+    <nav>
+        <ul th:class="pagination">
+            <li class="page-item" th:if="${bList.prev}">
+                <a th:class="page-link" th:href="@{/board/list(page=${(bList.start)-1})}" tabindex="-1" aria-disabled="true">Previous</a>
+            </li>
+            <th:block th:each="page:${bList.pageList}">
+                <li th:class="'page-item'+${bList.page==page?' active':''}" aria-current="page">
+                    <a th:class="page-link" th:href="@{/board/list(page=${page})}">[[${page}]]</a>
+                </li>
+            </th:block>
+            <li th:class="page-item" th:if="${bList.next}">
+                <a th:class="page-link" th:href="@{/board/list(page=${(bList.end)+1})}">Next</a>
+            </li>
+        </ul>
+    </nav>
     <a class="button" th:href="@{/board/write}">새 글 쓰기</a>
 </body>
 </html>

@@ -7,11 +7,17 @@ import lombok.extern.log4j.Log4j2;
 import org.conan.myboot.domain.Board;
 import org.conan.myboot.dao.BoardMapper;
 import org.conan.myboot.domain.BoardDTO;
+import org.conan.myboot.domain.PageRequestDTO;
+import org.conan.myboot.domain.PageResultDTO;
 import org.conan.myboot.repository.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.function.Function;
 
 @Service
 @Log4j2
@@ -35,6 +41,25 @@ public class BoardService{
                 .hit(dto.getHit())
                 .build();
         return entity;
+    }
+
+    public PageResultDTO<BoardDTO, Board> getList(PageRequestDTO requestDTO){
+        Pageable pageable = requestDTO.getPageable(Sort.by("bno").descending());
+        Page<Board> result = boardRepository.findAll(pageable);
+        Function<Board, BoardDTO> fn = (entity -> entityToDto(entity));
+        return new PageResultDTO<>(result, fn);
+    }
+
+    public BoardDTO entityToDto(Board entity){
+        BoardDTO dto = BoardDTO.builder()
+                .bno(entity.getBno())
+                .title(entity.getTitle())
+                .content(entity.getContent())
+                .writer(entity.getWriter())
+                .regDate(entity.getRegDate().atStartOfDay())
+                .hit(entity.getHit())
+                .build();
+        return dto;
     }
 }
 
