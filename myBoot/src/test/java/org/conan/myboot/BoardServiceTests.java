@@ -24,15 +24,6 @@ public class BoardServiceTests {
     private BoardRepository boardRepository;
 
     @Test
-    public void write(){
-        BoardDTO boardDTO = BoardDTO.builder()
-                .title("Test title1")
-                .content("Test Content1")
-                .writer("user001")
-                .build();
-        log.info(boardService.write(boardDTO));
-    }
-    @Test
     public void testQuery(){
         Pageable pageable = PageRequest.of(0,10,Sort.by("bno").descending());
         QBoard qBoard = QBoard.board;
@@ -56,17 +47,10 @@ public class BoardServiceTests {
     }
     @Test
     public void testList(){
-        PageRequestDTO pageRequestDTO = PageRequestDTO.builder().page(1).size(5).build();
-        PageResultDTO<BoardDTO, Board> resultDTO = boardService.getList(pageRequestDTO);
-
-        log.info("PREV:"+resultDTO.isPrev());
-        log.info("NEXT:"+resultDTO.isNext());
-        log.info("TOTAL PAGE:"+resultDTO.getTotalPage());
-        log.info("----------------------------------------");
-        for(BoardDTO boardDTO: resultDTO.getDtoList()){
+        PageRequestDTO pageRequestDTO = new PageRequestDTO();
+        PageResultDTO<BoardDTO, Object[]> result = boardService.getList(pageRequestDTO);
+        for(BoardDTO boardDTO : result.getDtoList()){
             log.info(boardDTO);
         }
-        log.info("----------------------------------------");
-        resultDTO.getPageList().forEach(i->log.info(i));
     }
 }

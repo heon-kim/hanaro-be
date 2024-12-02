@@ -19,8 +19,10 @@ public class BoardDTO {
     private Long bno;
     private String title;
     private String content;
-    private String writer;
-    private LocalDateTime regDate;
-    private Integer hit;
+//    private String writer;
+    private String writerEmail;
+    private String writerName;
+    private LocalDateTime regDate, modDate;
+    private Integer replyCount;
 }
 
