@@ -1,60 +1,78 @@
 package org.conan.myboot.service;
 
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import org.conan.myboot.domain.PageRequestDTO;
+import org.conan.myboot.domain.PageResponseDTO;
 import org.conan.myboot.domain.Todo;
+import org.conan.myboot.domain.TodoDTO;
 import org.conan.myboot.repository.TodoRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class TodoService {
-    @Setter(onMethod_=@Autowired)
-    TodoRepository todoRepository;
+    private final ModelMapper modelMapper;
+    private final TodoRepository todoRepository;
 
+    public Integer write(TodoDTO todoDTO){
+        log.info("...........");
+        Todo todo = modelMapper.map(todoDTO, Todo.class);
+        return todoRepository.save(todo).getTno();
+    }
 
-    public List<Todo> getList(){
-        log.info("getList............");
-        return todoRepository.findAll();
-    }
-    public void write(Todo todo){
-        log.info("write.......{}", todo.getTno());
-        Todo newTodo= Todo.builder()
-                .title(todo.getTitle())
-                .writer(todo.getWriter())
-                .dueDate(todo.getDueDate())
-                .complete(todo.isComplete())
-                .build();
-        todoRepository.save(newTodo);
-    }
-    public Todo read(Integer tno) {
-        log.info("get..........{}", tno);
-        Todo todo = new Todo();
+    public TodoDTO read(Integer tno){
         Optional<Todo> result = todoRepository.findById(tno);
-        if (result.isPresent()) {
-            todo = result.get();
-        }
-        return todo;
+        Todo todo = result.orElseThrow();
+        TodoDTO dto = modelMapper.map(todo, TodoDTO.class);
+        return dto;
     }
-    public Todo modify(Todo todo){
-        log.info("modify............{}", todo);
-        Todo updatedTodo = Todo.builder()
-                .tno(todo.getTno())
-                .title(todo.getTitle())
-                .writer(todo.getWriter())
-                .complete(todo.isComplete())
-                .dueDate(todo.getDueDate())
-                .build();
-        return todoRepository.save(updatedTodo);
+
+    public void modify(TodoDTO todoDTO){
+        Optional<Todo> result = todoRepository.findById(todoDTO.getTno());
+        Todo todo = result.orElseThrow();
+        todo.setTitle(todoDTO.getTitle());
+        todo.setDueDate(todoDTO.getDueDate());
+        todo.setComplete(todoDTO.isComplete());
+        todoRepository.save(todo);
     }
-    public void remove(Integer tno){
-        log.info("remove.......{}", tno);
+
+    public void delete(Integer tno){
         todoRepository.deleteById(tno);
+    }
+
+    public PageResponseDTO<TodoDTO> list(PageRequestDTO pageRequestDTO){
+        Pageable pageable =  PageRequest.of(
+                pageRequestDTO.getPage()-1,
+                pageRequestDTO.getSize(),
+                Sort.by("tno").descending()
+        );
+        Page<Todo> result = todoRepository.findAll(pageable);
+        List<TodoDTO> dtoList = result.getContent().stream()
+                .map(todo -> modelMapper.map(todo, TodoDTO.class))
+                .collect(Collectors.toList());
+        long totalCount = result.getTotalElements();
+        PageResponseDTO<TodoDTO> responseDTO = PageResponseDTO.<TodoDTO>withAll()
+                .dtoList(dtoList)
+                .pageRequestDTO(pageRequestDTO)
+                .totalCount(totalCount)
+                .build();
+        return responseDTO;
     }
 }

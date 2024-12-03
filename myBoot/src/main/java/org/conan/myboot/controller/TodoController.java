@@ -1,63 +1,49 @@
 package org.conan.myboot.controller;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.conan.myboot.domain.Todo;
+import org.conan.myboot.domain.PageRequestDTO;
+import org.conan.myboot.domain.PageResponseDTO;
+import org.conan.myboot.domain.TodoDTO;
 import org.conan.myboot.service.TodoService;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Map;
 
-@Controller
+@RestController
+@RequiredArgsConstructor
 @Log4j2
-@RequestMapping("/todo/*")
-@AllArgsConstructor
-public class TodoController {
-    private TodoService todoService;
+@RequestMapping("/api/todo")
+public class TodoController{
+    private final TodoService service;
+    private final TodoService todoService;
+
+    @GetMapping("/{tno}")
+    public TodoDTO get(@PathVariable(name="tno") Integer tno){
+        return service.read(tno);
+    }
     @GetMapping("/list")
-    public void list(Model model){
-        List<Todo> tList = todoService.getList();
-        model.addAttribute("tList", tList);
-        log.info("tList: " + tList);
+    public PageResponseDTO<TodoDTO> List(PageRequestDTO pageRequestDTO){
+        log.info(pageRequestDTO);
+        return service.list(pageRequestDTO);
     }
-    @GetMapping("/write")
-    public void registerPage(){
-        log.info("write");
+    @PostMapping("/")
+    public Map<String, Integer> write(@RequestBody TodoDTO todoDTO){
+        log.info("TodoDTO:"+todoDTO);
+        Integer tno = service.write(todoDTO);
+        return Map.of("TNO", tno);
     }
-    @PostMapping("/write")
-    public String register(Todo todo, RedirectAttributes rttr) {
-        log.info("write: {}", todo);
-        todoService.write(todo);
-        rttr.addFlashAttribute("result", todo.getTno());
-        return "redirect:/todo/list";
+    @PutMapping("/{tno}")
+    public Map<String, String> modify(@PathVariable(name="tno") Integer tno, @RequestBody TodoDTO todoDTO){
+        todoDTO.setTno(tno);
+        log.info("Modify:"+todoDTO);
+        service.modify(todoDTO);
+        return Map.of("RESULT", "SUCCESS");
     }
-    @GetMapping({"/read", "/modify"})
-    public void read(@RequestParam("tno") Integer tno, Model model){
-        log.info("/read or /write");
-        model.addAttribute("todo", todoService.read(tno));
-    }
-    @PostMapping("/modify")
-    public String modify(Todo todo, RedirectAttributes rttr){
-        log.info("modify: {}", todo);
-        try{
-            todoService.modify(todo);
-            return "redirect:/todo/list";
-        } catch (Exception e){
-            return "/todo/modify";
-        }
-    }
-    @PostMapping("/remove")
-    public String remove(@RequestParam("tno")Integer tno, RedirectAttributes rttr){
-        log.info("remove..........{}", tno);
-        try{
-            todoService.remove(tno);
-        } catch (Exception e){}
-        return "redirect:/todo/list";
+    @DeleteMapping("/{tno}")
+    public Map<String, String> remove(@PathVariable(name="tno") Integer tno){
+        log.info("Remove:"+tno);
+        service.delete(tno);
+        return Map.of("RESULT","SUCCESS");
     }
 }
