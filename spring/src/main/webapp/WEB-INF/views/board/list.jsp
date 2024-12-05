@@ -11,30 +11,6 @@
 <html>
 <head>
     <title>Board</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            text-align: center;
-            padding: 8px;
-        }
-        th {
-            background-color: #f4f4f4;
-        }
-        tr:hover {
-            background-color: #f9f9f9;
-        }
-        a {
-            text-decoration: none;
-            color: black;
-        }
-        a:hover {
-            color: blue;
-        }
-    </style>
 </head>
 <body>
 <table>
