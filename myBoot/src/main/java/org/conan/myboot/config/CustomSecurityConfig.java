@@ -2,11 +2,17 @@ package org.conan.myboot.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.conan.myboot.handler.APILoginFailureHandler;
+import org.conan.myboot.handler.APILoginSuccessHandler;
+import org.conan.myboot.handler.JWTCheckFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -25,12 +31,14 @@ public class CustomSecurityConfig {
         });
         http.sessionManagement(sessionConfig->{
             sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-            try {
-                http.csrf(config -> config.disable());
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
         });
+        http.csrf(config -> config.disable());
+        http.formLogin(config->{
+            config.loginPage("/api/subscriber/login");
+            config.successHandler(new APILoginSuccessHandler());
+            config.failureHandler(new APILoginFailureHandler());
+        });
+        http.addFilterBefore(new JWTCheckFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -44,5 +52,10 @@ public class CustomSecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
     }
 }
