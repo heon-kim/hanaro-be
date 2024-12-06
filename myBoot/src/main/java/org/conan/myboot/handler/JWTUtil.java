@@ -1,11 +1,12 @@
 package org.conan.myboot.handler;
 
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.WeakKeyException;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.Jwts;
 
 import javax.crypto.SecretKey;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Map;
@@ -35,6 +36,16 @@ public class JWTUtil {
             throw new CustomJWTException("WeakKeyException");
         }catch(UnsupportedEncodingException e){
             throw new CustomJWTException("UnsupportedEncodingException");
+        }catch(MalformedJwtException malformedJwtException){
+            throw new CustomJWTException("Malformed");
+        }catch(ExpiredJwtException expiredJwtException){
+            throw new CustomJWTException("Expired");
+        }catch(InvalidClaimException invalidClaimException){
+            throw new CustomJWTException("Invalid");
+        }catch(JwtException jwtException){
+            throw new CustomJWTException("JWT Error");
+        }catch (Exception e){
+            throw new CustomJWTException("Error");
         }
         return claim;
     }

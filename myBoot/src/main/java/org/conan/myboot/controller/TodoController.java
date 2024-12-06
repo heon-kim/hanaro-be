@@ -6,6 +6,7 @@ import org.conan.myboot.domain.PageRequestDTO;
 import org.conan.myboot.domain.PageResponseDTO;
 import org.conan.myboot.domain.TodoDTO;
 import org.conan.myboot.service.TodoService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -22,6 +23,7 @@ public class TodoController{
     public TodoDTO get(@PathVariable(name="tno") Integer tno){
         return service.read(tno);
     }
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @GetMapping("/list")
     public PageResponseDTO<TodoDTO> List(PageRequestDTO pageRequestDTO){
         log.info(pageRequestDTO);
